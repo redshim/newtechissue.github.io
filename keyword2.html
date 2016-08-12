@@ -1,0 +1,104 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+  <title>신기술 문제점 분석(D3)</title>
+  <meta name="description" content="website description" />
+  <meta name="keywords" content="website keywords, website keywords" />
+  <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+  <link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Tangerine&amp;v1" />
+  <link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Yanone+Kaffeesatz" />
+  <link rel="stylesheet" type="text/css" href="style/style.css" />
+
+  <style>
+    text:hover {
+        stroke: black;
+    }
+  </style>
+  <script src="D3/d3.min.js" charset="utf-8"></script>
+  <script src="D3/d3.layout.cloud.js"></script>
+</head>
+
+<body>
+  <div id="main">
+    <div id="header">
+      <div id="logo">
+        <h1><a href="#">경쟁차 신기술 고객 불만 분석</a></h1>
+      </div>
+      <div id="menubar">
+        <ul id="menu">
+          <!-- put class="current" in the li tag for the selected page - to highlight which page you're on -->
+          <li><a href="index.html">Home</a></li>
+          <li class="current"><a href="keyword2.html">contents</a></li>
+        </ul>
+      </div>
+    </div>
+    <div id="site_content">
+
+      <div id="sidebar_container">
+        <div class="sidebar">
+        <!-- insert your sidebar items here -->
+                <img class = "center" src="style/bsd.jpg" alt="bsd" height="100" width = "150" />
+        </div>
+
+      </div>
+
+      <div id="content">
+        <!-- insert the page content here -->
+
+        <h2>사각지대 경보장치 문제(BSD) </h2>
+        <p>Blind Spot Detection</p>
+  <div id="cloud"></div>
+          <script type="text/javascript">
+            var weight = 7,   // change me
+                width = 800,
+                height = 800;
+
+            var fill = d3.scale.category20();
+            d3.csv("./word_count_bsd.csv", function(d) {
+                return {
+                  text: d.word,
+                  size: +d.freq*weight
+                }
+              },
+              function(data) {
+                d3.layout.cloud().size([width, height]).words(data)
+                  //.rotate(function() { return ~~(Math.random() * 2) * 90; })
+                  .rotate(0)
+                  .font("Impact")
+                  .fontSize(function(d) { return d.size; })
+                  .on("end", draw)
+                  .start();
+
+                function draw(words) {
+                  d3.select("#cloud").append("svg")
+                      .attr("width", width)
+                      .attr("height", height)
+                    .append("g")
+                      .attr("transform", "translate(" + width/2 + "," + height/2 + ")")
+                    .selectAll("text")
+                      .data(words)
+                    .enter().append("text")
+                      .style("font-size", function(d) { return d.size + "px"; })
+                      .style("font-family", "Impact")
+                      .style("fill", function(d, i) { return fill(i); })
+                      .attr("text-anchor", "middle")
+                      .attr("transform", function(d) {
+                        return "translate(" + [d.x, d.y] + ")rotate(" + d.rotate + ")";
+                      })
+                    .text(function(d) { return d.text; });
+                }
+              });
+          </script>
+
+
+
+
+
+      </div>
+
+    <div id="footer">
+  <p>Copyright &copy; 현대자동차 내구기술팀 | <a href="http://validator.w3.org/check?uri=referer">HTML5</a> | <a href="http://jigsaw.w3.org/css-validator/check/referer">CSS</a></p>    </div>
+  </div>
+</body>
+</html>
